@@ -14,8 +14,51 @@ Warning:
 
 Files:      
 STAT1005 R and RMarkdown Cheat Sheet
-- Everything I know about R - Started when I was in STAT1005 Introduction to Probability
-- Everything I know about RMarkdown
+(Started when I was doing STAT1005 Introduction to Probability)
+- R instructions
+    - Set up an R project
+    - Set up an R script
+    - Installing packages
+    - Importing data
+    - Standard math symbols
+    - Comparisons
+    - Standard functions
+    - Creating vectors
+    - Generate random variables
+    - Analysing vector data
+    - Data manipulation functions
+    - Tables, dataframes and matrices
+    - Structural tools
+    - Create a function
+    - Graphs
+    - Approximations
+- Analysis using distributions
+    - Approximations
+    - Discrete distributions
+    - Continuous distributions
+    - Comparing data
+    - With resampling
+    - Simple linear regression
+    - Multiple linear regression
+    - Polynomial regression
+- RMarkdown Instructions
+    - Setting up a new RMarkdown
+    - Output options
+    - Contents table
+    - Font and fontsize
+    - Page margins
+    - Page layout
+    - Columns
+    - Using code in a document
+    - Displaying graphs
+    - Flow chart
+    - Inserting images
+    - Table in RMarkdown
+    - LaTeX commands
+    - LaTex tables
+    - Mathematical symbols
+    - Grrek symbols
+    - Other symbols
             
 STAT1005 Week 1 Cheat Sheet
 - Revision
