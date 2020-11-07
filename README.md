@@ -1,5 +1,5 @@
-# STAT1006
-All Cheat Sheets for STAT1006 Non-Parametric Inference and Regression plus R and RMarkdown cheat sheet
+# STAT1006 Regression and Non-Parametric Inference plus R and RMarkdown cheat sheet
+All Cheat Sheets for STAT1006 Regression and Non-Parametric Inference plus R and RMarkdown cheat sheet
 
 Author:     Lisa Luff
 
