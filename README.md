@@ -3,15 +3,21 @@ All Cheat Sheets for STAT1006 Non-Parametric Inference and Regression plus R and
 
 Author:     Lisa Luff
 
-Synopsis:   Cheats sheets for STAT1006 Non-Parametric Inference and Regression
-            Plus cheat sheet for R and R Markdown
-            
+Synopsis:   
+- Cheats sheets for STAT1006 Non-Parametric Inference and Regression
+- Plus cheat sheet for R and R Markdown
+
+Warning:    
+- Not intended for use by others
+- R and RMarkdown Cheat Sheet had more attention, so weekly cheat sheets might not be updated to be correct
+- R and RMarkdown Cheat Sheet has information from previous unit that may be incorrect (and this unit for that matter!), but I'm always open to feedback
+
 Files:      
-STAT1005 R and RMarkdown Cheat Sheet:
+STAT1005 R and RMarkdown Cheat Sheet
 - Everything I know about R - Started when I was in STAT1005 Introduction to Probability
 - Everything I know about RMarkdown
             
-STAT1005 Week 1 Cheat Sheet:
+STAT1005 Week 1 Cheat Sheet
 - Revision
 - Continuity Correction
 - Which Model/Inference?
