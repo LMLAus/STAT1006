@@ -5,7 +5,8 @@ Author:     Lisa Luff
 
 Synopsis:   
 - Cheats sheets for STAT1006 Non-Parametric Inference and Regression
-- Plus cheat sheet for R and R Markdown
+- Cheat sheet for R and R Markdown, with and without code chunks
+- Assignment for unit
 
 Warning:    
 - Not intended for use by others
@@ -122,4 +123,6 @@ STAT1005 Week 12 Cheat Sheet
 - Bias-Variance Trande-Off
 - Strategies for Dealing with Outliers
 
-Revisions:  07/11/2020 -  Created repository 
+Revisions:  07/11/2020 -  Created repository
+            09/02/2021 -  Added R and RMarkdown cheat sheet with code chunks
+                          Added assignment
