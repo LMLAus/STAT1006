@@ -1,0 +1,1603 @@
+---
+title: "R and RMarkdown Notes"
+author: "Lisa Luff"
+date: "6/14/2020"
+table: true
+mainfont: Arial
+output: 
+  pdf_document:
+    keep_tex: yes
+---
+
+```{r setup, include=FALSE, eval=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+\tableofcontents
+
+\newpage
+
+# R Instructions (Using RStudio)
+### Setting up a new R project
+1. Click on project on the top right hand corner
+2. Choose new project
+3. Choose existing directory
+4. Use the browse button
+5. Select the directory you want to use
+6. Select create project
+
+### Setting up a new R script
+1. Click on the empty page with a green plus just under file
+2. Select R Script
+3. Set up the top of the document with:
+  * Name of the script
+  * Your name and the date
+  * Put in edit dates as you go
+  * The purpose of the script
+4. Then you can write the script  
+
+### Installing packages
+* To install packages use -
+```{r, eval=FALSE}
+install.packages('packagename')
+```
+* Need to call on packages to use them, do this with
+```{r, eval=FALSE}
+library('packagename')
+```
+
+\newpage
+
+## Importing data into an R project
+* If you have the data in a file/document on your computer, you can look in the directory and click on the appropriate data file
+  * Or you can type in - 
+```{r, eval=FALSE}
+load('DocumentName')
+```
+  * This can be used for .RData documents \newline
+    
+* If you have text, excel, SPSS, etc documents, you can import them by clicking the import dataset button at the top of the environment window \newline
+
+* Txt files
+* Need to manually call them in
+```{r, eval=FALSE}
+variable = read.table('name.txt', header = T)
+```
+
+* CSV files
+* Importing csv from the directory
+  * You can click on the file in your directory and choose import
+  * OR use the read_csv function, you will need the readr package
+```{r, eval=FALSE}
+library(readr)
+variable <- read_csv('name.csv')
+```
+    * library(readr)
+    * *variable* <- read_csv("*name.csv*")
+* Importing csv from the web
+```{r, eval=FALSE}
+download.file('website.csv', destfile = 'filetoputin.csv')
+variable <- read.csv('filetoputin.csv')
+```
+  
+* JSON files
+  * You will need the package rjson and to call on it
+```{r, eval=FALSE}
+fromJSON(file = 'filename') # OR 'URL'
+```
+
+\newpage
+
+## R basics
+* Assigning variables <-, which can be done with **Alt -**
+* If writing two or more commands on the same line use **;**
+* If you want to reuse the previous command use the up arrow
+* **Ctrl Z** to undo
+* Use the little broom at the top of the environment window to erase the global environment
+
+### Standard Math Symbols
+
+| Symbol | Use |
+|:-------|:----|
+| + | Plus |
+| - | Minus |
+| * | Multiply |
+| / | Divide |
+| ^ | To the power of |
+| () | Brackets |
+| %*x*% | Use the above on non-integers (eg. floats) |
+
+### Comparisons
+
+| Symbol | Comparison |
+|:-------|:-----------|
+| == | Is equal to |
+| != | Not equal to |
+| < | Less than |
+| <= | Less than or equal to |
+| > | Greater than |
+| >= | Greater than or equal to |
+| any(*variable* == *x*) | If any element of *variable* is the same as *x* (or any other comparison), returns value of TRUE |
+| all(*variable* == *x*) | Only if ALL elements of *variable* is the same as *x* (or any other comparison), returns value of TRUE |
+
+### Standard functions
+  
+| Function | Use |
+|:---------|:----|
+| sum(*x*) | Sums anything in the brackets |
+| abs(*x*) | Finds the absolute value of anything in *x* |
+| sqrt(*x*) | Square root of *x* |
+| exp(*x*) | e to the power of *x* |
+| log(*x*) | Natural log |
+| log10(*x*) | Log with base 10 |
+| sin(*x*), cos(*x*), tan(*x*), etc | For trig functions |
+| pi | To represent the number pi |
+| choose(*n*, *k*) | The statistical **choose** |
+| combinations(*N*, *n1*) | The statistical *combinations* |
+| factorial(*x*) | The statistical **factorial**!|
+
+\newpage
+
+### Creating vectors
+* Use -
+```{r, eval=FALSE}
+vector <- c(x, y, z)
+```
+* If you assign a standard function to a variable, it will create a vector based on the specifications you enter in the function
+* To create a vector of numbers within a range assign it as 
+```{r, eval=FALSE}
+vector <- c(x:y:z)
+```
+  * *x* - is the start number 
+  * *y* - is how much to go up by with each step
+  * *z* - is the end of the range
+* To view or create a subset of data:
+  * To view, just use the following without assigning
+  * To create you can assign
+```{r, eval=FALSE}
+subset <- variable[x:y:z]
+# OR
+subset <- variable[c(x, y, z)]
+```
+* To use a non-standard function to create a vector:
+1. Set up the empty vector:
+```{r, eval=FALSE}
+vector <- as.vector(NULL)
+# OR
+vector <- NULL
+```
+2. Use a **for** loop
+
+\newpage
+
+### Generate a set of random variables
+    
+| Function | Use |
+|:---------|:----|
+| set.seed(*x*) | *x* can be any number, and it will ensure the same random values everytime |
+| sample(x = *a*, size = *b*, replace = *TRUE/FALSE*) | *a* - maximum value, *b* - number of variables to generate, replace - if sampling is with/without replacement |
+| runif(*n*) | *n* variables from a uniform distribution |
+| rnorm(*n*) | *n* variables from a Normal distribution |
+| rexp(*n*) | *n* variables from an exponential distribution |
+| rpois(*n*) | *n* variables from a poisson distribution |
+| rsignrank(*n*) | *n* variables from a Wilcoxon Signed-Rank Statistic distribution |
+
+\newpage
+
+### Analysing vector data
+
+| Function | Use |
+|:---------|:----|
+| *x*~*y* | Creates a formula or equation for *y* as determined by *x* |
+| head(*x*) | first 10 elements |
+| tail(*x*) | last 10 elements |
+| length(*x*) | Number of elements in a vector |
+| dim(*x*) | Number of dimension in a dataframe |
+| min(*x*) | Smallest value |
+| max(*x*) | Largest value |
+| median(*x*) | Median |
+| mean(*x*) | Mean |
+| weighted.mean(*datavector*, *probabilityvector*) | Discrete E[X] |
+| sd(*x*) | Standard deviation |
+| var(*x*) | Variance |
+| fivenum(*x*) | 5 number summary( min, Q1, median, Q3, max) |
+| summary(*x*) | Gives all information for any *x* |
+| quantile(*vector*, *nthp*) - Value of a quantile |
+| confint(*formula*, level = *x*) | Confidence interval for 0.*x*% |
+| sort(*x*) | Put the elements of *x* from lowest to highest |
+| rank(*x*) | Assigns ranks to variables of *x* from lowest to highest |
+| sign(*x*) | Gives back 1 if positive, -1 if negative and 0 if 0 |
+| stby(data = *x*, INDICES = *x\$y*, FUN = *z*, *a*, etc.) | This gives a summary of *y* based on *x* (usually a dataframe), using functions included in *z* (descr for descriptive summary), with *a*, etc. being further arguments for FUN (such as stats = 'common' for the usual statisical descriptors |
+
+\newpage
+
+### Data manipulation functions
+
+| Function | Use |
+|:---------|:----|
+| subset(*x*, subset = *y*, select = *z*) | *x* is the data to be subset, subset indicates which rows or elements to keep (especially vector elements), select indicates which columns or variables to keep in a dataframe |
+| OR subset(*x*, c(*a*, *b*)) | Where *x* is the dataframe, and *a* and *b* are to be included, or -c(), will exclude them |
+| *x*[,-*n*] | Creates subsect not including *n*th row, or ![] will exclude |
+| *x*[*x*==*y*] | When entered in a variable, will create a variable with the elements from *x* that match *y* or ![] will exclude |
+| split(*x*, *y*) | Divides data in *x* into groups defined by *y* |
+| print(*x*) OR return(*x*) | Output value for *x* |
+| table(*x\$y*) | Will tell you the number of values each variable in dataframe *x* takes for *y* |
+| *x*[*x*!=*y*] | Removes values of *y* from varible *x* |
+| class(*x*) | The 'class' of the object |
+| str(*x*) | Structure, the type of variables in *x* |
+| paste() | When used with print() combines elements in a visually pleasing way |
+| append(*x*, *y*) | Adds value of *y* to the end of variable *x* |
+| unique (*x*) | Looks for unique values of elements in *x* |
+| cat(*x*, *y*, etc.) | Catenates the values separated by commas |
+| rle(*x*) | Run lengths of elements in *variable* |
+| diff(*x*) | Give the difference between elements of *x* in order |
+| duplicated(*x*) | Gives TRUE/FALSE depending if there are duplicated values in *x* |
+| factor(*x*, *labels*, etc.) | This takes a vector *x* and allows you to replace the values with a vector or labels |
+| rep(*x*, *times*, each = *n*) | This will repeat the values in vector *x*, either the number of times in vector *times* for each elements, or all of them *n* number of times |
+| sapply(*x*, FUN = *y*, etc.) | Applies a function defined by *y*, with, etc. being further arguments for FUN = (can just use function(){*create function*} instead of FUN = ) to each element of *x* |
+
+### Tables, Data Frames and Matrices
+* A data frame allows a mix of numerical and non-numerical data, and factors in a single matrix
+  * You can call on a specific variable in a dataframe:    
+```{r, eval=FALSE}
+dataframe$variable
+```
+  * You can group one column by the values in another with:
+```{r, eval=FALSE}
+dataframe$column[categorycolumn]
+```
+  * Or everything except that with 
+```{r, eval=FALSE}
+dataframe$column[!categorycolumn]
+```
+  * You can select only rows matching a value in a category column with:
+```{r, eval=FALSE}
+library(dplyr)
+filter(datatofilter, categorycolumn == value)
+```
+  * To create a dataframe use 
+```{r, eval=FALSE}
+# Set up vectors for dataframe
+# Variable name will be column name
+vector1 <- (a, b, c)
+vector2 <- (1, 2, 3)
+vector3 <- (d, e, f)
+
+# Create dataframe using vectors
+data.frame(vector1, vector2, vector3, stringsAsFactors = FALSE)
+```
+  * Use stringsAsFactors = TRUE/FALSE depending on if you want your non-numerical factors to be considered as factors or not (probably not)
+  * You can view the columns in a dataframe with 
+```{r, eval=FALSE}
+name(dataframe)
+```
+
+\newpage
+
+* To set up a table, you can use 
+```{r, eval=FALSE}
+# Turn imported data into a table
+table <- as.table(importeddata)
+
+# Create manually
+table <- as.table(rbind(c(a, b, c), c(1, 2, 3), c(d, e, f)))
+
+# Label the table dimensions
+dimnames(table) <- list(RowName = c("A", "B", "C"), ColumnName = c("D", "E", "F"))
+```
+* Matrices
+  * A Matrix is essentially a dataframe of columns of grouped information
+```{r, eval=FALSE}
+# Create with cbind
+matrix <- cbind(vector1, vector2, vector3)
+
+# OR with as.matrix() to convert a list
+matrix <- as.matrix(list)
+```
+  * Matrix maths:
+    * Multiplication - *X* %\*% *Y*
+    * Addition/subtraction - *X* +- *Y*
+    * Transpose - t(*X*)
+    * Inverse - solve(t(*X*) %\*% *X*)
+
+### Structural Tools
+* **If/else** statements  
+```{r, eval=FALSE}
+if (condition is TRUE) {
+  do this
+}
+```
+    
+  OR  
+  
+```{r, eval=FALSE}
+if (condition is TRUE) {
+  do this
+} else if (condition is TRUE) {
+  do different thing
+} else {
+  do something different or nothing
+}
+```
+
+\newpage
+
+* **For** statements:  
+```{r, eval=FALSE}
+for (i in range(x:y:z)) {
+  do thing
+}
+
+# OR from a variable
+for (variable[i] in range(x:y:z)) {
+  do thing
+}
+```
+  * i can be represented by whatever you what, but it's the index
+  * The range can be numeric (*x*:*y*:*z*), or otherwise set
+  
+* **While** statements  
+```{r, eval=FALSE}
+while (boolean expression) {
+  do thing
+}
+```
+
+### Create a Function
+* To create a function:
+```{r, eval=FALSE}
+functionname <- function(inputvariable) {
+  what it does
+}
+```
+* To call on the function:
+```{r, eval=FALSE}
+functionname(inputevariable)
+```
+
+* If you want to apply your functions to numerous elements, you don't have to run a for loop
+  * Use **sapply(*x*, *y*)**, where *x* is a vector or list to apply the function to, *y* is the function to be applied
+  * Use **apply(*x*, *y*, *z*)**, where *x* is a matrix to apply the function to, *y* is how to apply it (1 for rows, 2 for columns, and c(1, 2) for both (will double over), and *z* is the function to be applied.
+
+\newpage
+
+### Graphs
+* **plot(x = a, y = b, ...)**, OR, **plot(y~x, data = *data*)**,
+    * Create a standard graph
+  * a is the vector for the x axis
+  * b is the vector for the y axis
+    * These don't have to be given by separate vectors, but can be
+  * OR y~x are the columns in a data frame to graph against each other
+    * Can be used with any of the plot types
+  * main = "x"  is the title for the graph
+  * xlab = "x", ylab = "y" is the label for the specified axis
+  * type = "z" is the type of marking the plot will use
+    * p for points
+    * l (lower case L) is line
+    * b for both
+    * h for vertical lines
+    * s for steps
+  * col = "colourname" to decide the colour of the markings
+* **barplot(x, y, ...)**
+    * Create a graph that shows the number of values that are equal to the same value
+* **hist(x, y, ...)**
+    * Similar to a barplot, but shows how many are within a range of values
+* **boxplot(x)**
+    * Gives a boxplot with the values of the fivenum() function
+    * Use split if you want to separate data based on categories
+      * boxplot(split(*x*, *y*))
+* **stem(x, scale = x, width = y)**
+    * Create a stem and leaf plot (the first value of a decimal or large number on the left, and all the following values to the right)
+  * scale = x tells it how many variables you want on the left of the line
+  * width = how many to show to the right
+  
+\newpage  
+  
+* **3D scatter plot**
+  * Need package scatterplot3d
+```{r, eval=FALSE}
+library(scatterplot3d)
+
+with(matrix, {
+  scatterplot3d(x = x,
+                y = y,
+                z = z,
+                main = 'title',
+                xlab/ylab/zlab = 'label',
+                color = 'colour',
+                type = 'type' # eg. h
+                pch = 19, 
+                coordinates <- s3d$xyz.convert(x, y, z),
+                text(coordinates$x,
+                     coordinates$y),
+                labels = row.names(matrix),
+                cex = .#sizepercent,
+                pos = # - to left or + to right number distance
+})
+```
+
+* To highlight certain points, use the function
+```{r, eval=FALSE}
+point(y ~ x, data = data, col = colour, pch = n)
+```
+  * *n* is a number referring to a point type
+    * eg. 16 is a filled in dot
+  
+* To overlay information from multiple graphs, use the function
+```{r, eval=FALSE}
+lines(a, b, col = 'c')
+```
+  * To overlay a line over the graph specified directly above it \newline
+
+* To add lines to the graph, use
+```{r, eval=FALSE}
+abline(a = intercept, b = slope, 
+       v = y-value, #(if horizontal)
+       h = x-value, # if vertical
+       col = colour, lwd = linewidth)
+```
+
+* To add multiple lines to the graph, use
+```{r, eval=FALSE}
+matlines(sort(explanatory), variable[order(explanatory), 2:3], lwd = linewidth, lty = 1)
+```
+
+\newpage
+
+* To add a legend use 
+```{r, eval=FALSE}
+legend("position", legend = c("labels"), col = c('colours'), pch = n)
+```
+  * Where position is either a graph location, or 'bottomleft', etc as a location
+  
+* To create a group of graphs
+```{r, eval=FALSE}
+par(mfrow = c(x, y))
+```
+  * Before doing any plotting, and then just plot the graphs to be used from left to right and then top to bottom
+  * *x* and *y* is how many rows and columns of data
+
+* Set the margins of plots with par
+```{r, eval=FALSE}
+par(mar = c(x, a, y, b) +/- n)
+```
+    * *x* - Bottom
+    * *a* - Left
+    * *y* - Top
+    * *b* - Right
+    * *n* - Any buffer
+    * The default settings are: c(5.1, 4.1, 4.1, 5.1)
+    
+* Make the plot square with par
+```{r, eval=FALSE}
+par(pty = 's')
+```
+
+* Advanced graph labels
+  * If you want a specific range:
+```{r, eval=FALSE}
+xlim(start, end)
+ylim(start, end)
+```
+  * Rotate the x labels to be perpendicular
+```{r, eval=FALSE}
+las = 2
+```
+  * To not display the standard point labels:
+```{r, eval=FALSE}
+xaxt = 'n'
+yaxt = 'n'
+```
+
+\newpage
+
+  * To set your own point labels:
+```{r, eval=FALSE}
+axis(xy, labels = c("strings"), at seq(start, stop, step))
+```
+    * *xy* is which axis, x = 1 and y = 2
+    * The sequence is the range and point positions for the labels
+    * Can use las to specifically rotate y labels
+  * To not display standard graph labels
+```{r, eval=FALSE}
+ann = FALSE
+```
+  * Set specific graph labels:
+```{r, eval=FALSE}
+mtext(side = xyt, line = p, "string", cex = n)
+```
+    * *xyt* - is the label axis, main title = 3, x = 1, y = 2
+    * *p* - is the distance from the graph
+    * *n* - is the size of the text
+  
+\newpage
+  
+## Analysis using distributions
+### Approximations
+* Normal distribution
+  * Probability
+```{r, eval=FALSE}
+pnorm(Z)
+# OR
+pnorm(x, mean = a, sd = b)
+```
+  * Z score
+```{r, eval=FALSE}
+qnorm(p)
+```
+  * Checking for Normality
+```{r, eval=FALSE}
+qqplot(dataframe)
+qqline(dataframe)
+shapiro.test(dataframe)
+```
+* T distribution
+  * Probability
+```{r, eval=FALSE}
+pt(x, df)
+```
+  * T score
+```{r, eval=FALSE}
+qt(p, df)
+```
+* Chi-squared
+  * Probability ($\alpha$)
+```{r, eval=FALSE}
+pchisq(chisquared, df)
+```
+  * $\chi^2_{df}$
+```{r, eval=FALSE}
+qchisq(alpha, df)
+```
+
+\newpage
+
+### Discrete distributions
+* Binomial
+  * Probability
+```{r, eval=FALSE}
+pbinom(x, n, p(S))
+```
+  * Random variable X
+```{r, eval=FALSE}
+qbinom(p, n, p(S))
+```
+* Negative Binomial
+  * Probability
+```{r, eval=FALSE}
+pnbinom(x, r, p(S))
+```
+  * Random variable X
+```{r, eval=FALSE}
+qnbinom(p, r, p(S))
+```
+* Geometric
+  * Probability
+```{r, eval=FALSE}
+pgeom(x, p(S))
+```
+  * Random variable X
+```{r, eval=FALSE}
+qgeom(p, p(S))
+```
+* Hypergeometric
+  * Probability
+```{r, eval=FALSE}
+phyper(x, m, n, k)
+```
+  * Random variable X
+```{r, eval=FALSE}
+qhyper(q, m, n, k)
+```
+
+\newpage
+
+* Poisson
+  * Probability
+```{r, eval=FALSE}
+ppois(x, lambda)
+```
+  * Random Variable X
+```{r, eval=FALSE}
+qpois(p, lambda)
+```
+
+### Continuous distributions
+* Uniform
+  * Probability
+```{r, eval=FALSE}
+punif(x, min = a, max = b)
+```
+  * Random Variable X
+```{r, eval=FALSE}
+qunif(p, min = a, max = b)
+```
+* Log normal
+  * Probability
+```{r, eval=FALSE}
+plnorm(x, meanlog = a, sdlog = b)
+```
+  * Random Variable X
+```{r, eval=FALSE}
+qlnorm(p, meanlog = a, sdlog = b)
+```
+* Gamma
+  * Probability
+```{r, eval=FALSE}
+pgamma(x, alpha, rate = beta, scale = 1/beta)
+```
+  * Random variable X
+```{r, eval=FALSE}
+qgamma(p, alpha, rate = beta, scale = 1/beta)
+```
+
+\newpage
+
+* Exponential
+  * Probability
+```{r, eval=FALSE}
+pexp(x, lambda)
+```
+  * Random variable X
+```{r, eval=FALSE}
+qexp(p, lambda)
+```
+
+### Comparing Data
+* T-test
+  * Hypothesis testing (Single Sample)
+```{r, eval=FALSE}
+t.test(vector, mu = x, alternative = "less"/"greater"/"two.sided", conf.level = "%confidence")
+```
+  * Comparing population means (Two Sample and Paired)
+```{r, eval=FALSE}
+t.test(samplevector, comparisonvector, mu = 0, alternative = "less"/"greater"/"two.sided", 
+       paired = TRUE/FALSE, conf.level = "%confidence")
+```
+* Wilcoxon Signed-Rank Test
+  * Is the non-parametric version of a t.test for when the data is not Normally distributed
+  * One sample
+```{r, eval=FALSE}
+wilcox.test(vector, mu = x, alternative = 'less'/'greater'/'two.sided', exact = TRUE/FALSE)
+```
+  * V - represents $W$ statistic
+  * Manual p-value if no ties and small (< 50)
+```{r, eval=FALSE}
+psignrank(W, n)
+```
+  * Two sample and paired
+```{r, eval=FALSE}
+wilcox.test(vector1, vector2, alternative = 'less'/'greater'/'two.sided', 
+            paired = TRUE/FALSE, exact = TRUE/FALSE)
+```
+    * Manual p-value if no ties and small (< 50)
+```{r, eval=FALSE}
+pwilcox(W, n1, n2)
+```
+
+\newpage
+
+* Levene Test
+  * Tests if samples have the same variance, giving a p-value based on the probability that the null hypothesis that they are equal is true
+```{r, eval=FALSE}
+library(CARS)
+leveneTest(data = z, x ~ y)
+```
+  * Based on data frame *z*
+  * Test *y* based on a formula/equation for *y* in relation to *x*
+      
+* ANOVA
+  * Hypothesis testing for greater than two samples, or comparisons
+  * The hypothesis will be whether or not the means are statistically different
+    * First create the ANOVA model
+```{r, eval=FALSE}
+a <- aov(data = z, x ~ y)
+```
+    * Based on data frame *z*
+    * Test *y* based on a formula/equation for *y* in relation to *x*
+  * Then get a summary of the model
+```{r, eval=FALSE}
+summary(a)
+# OR (both give same information)
+anova(a)
+```
+* Welch's ANOVA
+  * The ANOVA for is variance between variables is not equal
+```{r, eval=FALSE}
+oneway.test(data = z, x ~ y, var.equal = FALSE)
+```
+  * Based on data frame *z*
+  * We test *y* based on a formula/equation for *y* in relation to *x*
+  * var.equal indicates which one-way ANOVA test to run
+  * FALSE - specifies a Welch's ANOVA
+  * TRUE - specifies a standard ANOVA, but aov is the preferred method for this
+* Kruskal-Wallis Test
+  * The non-parametric version of the ANOVA for when the data sets are not Normally distributed
+```{r, eval=FALSE}
+kruskal.test(data = z, x ~ y)
+```
+  * Based on data frame *z*
+  * Test *y* based on a formula/equation for *y* in relation to *x*
+
+\newpage
+
+* Covariance
+  * Joint probability distribution
+```{r, eval=FALSE}
+cov(table or dataframe for XY)
+```
+  * Matched pair design
+    * Pearson: 
+```{r, eval=FALSE}
+cov(table/dataframe for XY, paired = TRUE, method = 'Pearson')
+```
+  * Spearman: 
+```{r, eval=FALSE}
+cov(table/dataframe for XY, paired = TRUE, method = 'Spearman')
+```
+* Correlation
+```{r, eval=FALSE}
+cor(table/dataframe, method = 'Pearson'/'Spearman'/'Kendall', exact = TRUE/FALSE)
+```
+  * In hypothesis testing:
+```{r, eval=FALSE}
+cor.test(table/dataframe, alternative = 'Pearson'/'Spearman'/'Kendall', conf.level = 0.95)
+```
+  * Graph of multiple correlations:
+```{r, eval=FALSE}
+library(PerformanceAnalytics)
+chart.Correlation(table/dataframe, histogram(or other type) = TRUE)
+```
+  * Provides a table of graphs and correlation coefficient values
+  * Or use pairs() - Not as good
+* Chi-squared test
+  * Goodness-of-fit testing
+```{r, eval=FALSE}
+chisq.test(vector)
+```
+  * Independence of two-way contingency tables
+```{r, eval=FALSE}
+chisq.test(table/dataframe of XY)
+```
+
+### Comparing Data With Resampling
+* Bootstrapping
+```{r, eval=FALSE}
+library(boot)
+boot(dataframe, theta, x)
+```
+  * Where theta is a function to find the statistic
+  * And *x* is how many resamplings you want to do
+  * Entered into a variable it will output a dataframe and $t will be the statistic for each resampling
+  * Bias is the difference between the original mean and the average mean for the resamplings
+
+\newpage
+
+* Permutations
+```{r, eval=FALSE}
+library(CarletonStats)
+permTest(x, vector, alternative = 'less'/'greater'/'two.sided')
+```
+
+### Simple Linear Regression
+* Use the linear model function
+```{r, eval=FALSE}
+lm(explantory ~ response, data = dataframe)
+```
+  * Will output a dataframe
+  * Information can be seen with summary()
+    * $\beta_0$ - Intercept~Estimate
+    * $\beta_1$ - *explanatory*~Estimate
+    * Standard error for each
+    * *All hypothesis tests based on null = 0*
+    * T statistic for each
+    * Two-sided p-value for each
+    * Degrees of freedom
+    * $R^2$ (Coefficient of Determination)
+    * F statistic, degrees of freedom and two-sided p-value
+* Or can use ANOVA function as before
+```{r, eval=FALSE}
+variableaov <- aov(explantory ~ response, data = dataframe)
+anova(variableaov)
+```
+  * Will output a dataframe
+    * DFR - *explanatory* ~ df
+    * DFE - Residuals ~ df
+    * SSR - *explanatory* ~ Sum Sq
+    * SSE - Residuals ~ Sum Sq
+    * MSR - *explanatory* ~ Mean Sq
+    * MSE - Residuals ~ Mean Sq
+    * *All hypothesis tests based on null = 0*
+    * F value
+    * Pr(>F) - Two-sided p-value
+* Both give the exact same p-value
+
+\newpage
+* Confidence and Prediction Intervals for  Linear Regression
+  * Confidence Intervals
+    * Use the predict function
+```{r, eval=FALSE}
+variableconfmean <- predict(variablelm, interval = "confidence", level = %decimal)
+```
+    * To predict as specific values add the argument
+```{r, eval=FALSE}
+variableconfmean <- predict(variablelm, interval = "confidence", level = %decimal, 
+                            newdata <- data.frame(explanatory = c(values)))
+```
+  * Prediction Intervals
+    * Use the predict function
+```{r, eval=FALSE}
+variablepi <- predict(variablelm, interval = "prediction", level = %decimal)
+```
+  * To predict as specific values add the argument
+```{r, eval=FALSE}
+variablepi <- predict(variablelm, interval = "prediction", level = %decimal, 
+                      newdata = data.frame(explanatory = c(values)))
+```
+
+* Diagnostic Testing
+  * Residuals 
+```{r, eval=FALSE}
+variablelm$residuals
+```
+  * Standardise residuals
+```{r, eval=FALSE}
+rstandard(variablelm)
+```
+  * Hat matrix elements (outliers)
+```{r, eval=FALSE}
+hatvalues(variablelm)
+```
+  * Cooks distance (leverage)
+```{r, eval=FALSE}
+cooks.distance(variablelm)
+```
+  * Detailed data
+```{r, eval=FALSE}
+influence.measures(variablelm)
+```
+  
+\newpage
+  
+  * All in one
+```{r, eval=FALSE}
+plot(variablelm)
+```
+  * Creates 4 plots:
+    * Residuals vs fitted
+    * Standardised residuals vs fitted
+    * Normal QQ
+    * Residuals vs Leverage
+* Linear Regression with matrices
+$$\boldsymbol{Y} = 
+\left( \begin{tabular}{c}
+$y_1$ \\
+$y_2$ \\
+. \\
+. \\
+$y_n$ \\
+\end{tabular} \right) = 
+\boldsymbol{X} = 
+\left( \begin{tabular}{c c}
+1 & $X_1$ \\
+1 & $X_2$ \\
+. & . \\
+. & . \\
+1 & $X_n$ \\
+\end{tabular} \right) x 
+\boldsymbol{\beta} = 
+\left( \begin{tabular}{c}
+$\beta_0$ \\
+$\beta_1$ \\
+\end{tabular} \right) +
+\boldsymbol{\varepsilon} = 
+\left( \begin{tabular}{c}
+$\varepsilon_1$ \\
+$\varepsilon_2$ \\
+. \\
+. \\
+$\varepsilon_n$ \\
+\end{tabular} \right)$$
+  * $(\boldsymbol{X'X})$ is t(**X**) %\*% **X**
+  * $(\boldsymbol{X'X})^{-1}$ is solve(t(**X**) %\*% **X**)
+  * $(\boldsymbol{X'Y})$ is t(**X**) %\*% **Y**
+  * $\hat{\beta}$ is solve(t(**X**) %\*% **X**) %\*% t(**X**) %\*% **Y**
+  * $\boldsymbol{\hat{Y}} = \boldsymbol{X\hat{\beta}}$ 
+  * $\boldsymbol{\hat{\varepsilon}} = \boldsymbol{Y} - \boldsymbol{\hat{Y}}$
+  * $SSE = \boldsymbol{\varepsilon'\varepsilon}$
+  * $s^2 = \frac{SSE}{n - 2}$
+  * lm is lm($\boldsymbol{Y} \sim \boldsymbol{X}$, data = *matrix*)
+    * Will give the usual info
+
+### Multiple Linear Regression
+* Uses matrices:
+$\boldsymbol{Y} = \boldsymbol{X\beta} + \boldsymbol{\varepsilon}$
+$$\boldsymbol{Y} = 
+\left( \begin{tabular}{c}
+$y_1$ \\
+$y_2$ \\
+. \\
+. \\
+$y_n$ \\
+\end{tabular} \right) =  
+\boldsymbol{X} = 
+\left( \begin{tabular}{c c c c c}
+1 & $X_{11}$ & $X_{12}$ & ... & $X_{1(p + 1)}$ \\
+1 & $X_{21}$ & $X_{22}$ & ... & $X_{2(p + 1)}$ \\
+. & . & . & . & . \\
+. & . & . & . & . \\
+1 & $X_{n1}$ & $X_{n2}$ & ... & $X_{n(p + 1)}$ \\
+\end{tabular} \right) x 
+\boldsymbol{\beta} = 
+\left( \begin{tabular}{c}
+$\beta_0$ \\
+$\beta_1$ \\
+. \\
+. \\
+$\beta_{p + 1}$
+\end{tabular} \right) + 
+\boldsymbol{\varepsilon} = 
+\left( \begin{tabular}{c}
+$\varepsilon_1$ \\
+$\varepsilon_2$ \\
+. \\
+. \\
+$\varepsilon_n$ \\
+\end{tabular} \right);$$
+  * Where $X = X_{ij}$, where i = 1, 2, ..., n, and j = 1, 2, ..., p, p + 1
+* Exploratory analysis done with
+  * Multivariate correlation plots
+  * Multiple boxplots
+  * 3-D scatterplot if few enough variables
+* lm = lm(**Y** ~ $\boldsymbol{X_1} + \boldsymbol{X_2} + ... + \boldsymbol{X_n}$, data = *matrix*)
+  * OR lm = lm(**Y** ~., data = *matrix*) - if all variables
+  * Can use x = TRUE to keep the variables in the order provided
+  * Gives the usual info, but for each $\beta_j$
+  * Each $\beta_j$ needs to be interpretted as the increase/decrease **when all other variables being held constant**
+  * Need to use Adjusted R-squared for $R^2$
+* Most equations the same as for simple linear regression
+* Variance is $s^2 = \frac{SSE}{n - p - 1}$
+  * summary(lm)$sigma gives estimation s
+* Variance/Correlation matrix
+$$\begin{tabular}{l | l l l}
+ & & x1 & x2 \\
+\hline
+ & \boxed{Var} & Cov & Cov \\
+x1 & Cov & \boxed{Var} & Cov \\
+x2 & Cov & Cov & \boxed{Var} \\
+\end{tabular}$$
+  * With solve(t(**X**) %\*% **X**) %\*% **X**
+* ANOVA - 
+  * $H_0: \beta_1 = \beta_2 = ... = \beta_p = 0$
+  * $H_A:$ at least one of the $\beta_i \ne 0$
+    * Create lm of each combo
+      * This might just be lm(*y* ~ 1, data = *data*)
+    * anova(*lm1*, *lm2*)
+    * OR use package rms:
+      anova(rms::ols(*y* ~ $x_1, x_2, ..., x_i$, data = *data*)
+* F-test for comparing models
+  * **Model 1** - $H_0: \boldsymbol{Y} = \boldsymbol{X_1\beta_1} + \boldsymbol{\varepsilon}$
+  * **Model 2** - $H_A: \boldsymbol{Y} = \boldsymbol{X_1\beta_1} + \boldsymbol{X_2\beta_2} + \boldsymbol{\varepsilon}$
+    * Use ANOVA or summary
+* Partial F-test to compare models with variables removed
+  * $H_0: \beta_c1 = \beta_c2 = ... = 0$  
+  * $H_A: \beta_c1, \beta_c2, ...$ are not all 0
+    * Use ANOVA or summary
+    
+* Leverage - 
+  * Plotting:
+    * For plotting with actual data:
+```{r, eval=FALSE}
+plot(1:n, hatvalues(lm), xlab = x_i, ylab = leverage)
+abline(h = (2*(p + 1))/n)
+```
+  * For plotting with standarised variables:
+```{r, eval=FALSE}
+plot(hatvalues(lm), stdres(lm), xlab = leverage, ylab = standardised residuals)
+abline(v = (2*(p + 1))/n)
+abline(h = 0)
+```
+
+\newpage
+
+  * Get hat values with:
+    * For actual data:
+```{r, eval=FALSE}
+indentify(1:n, hatvalues(lm), labels = rownames(data))
+```
+  * For standardised data
+```{r, eval=FALSE}
+indentify(hatvalues(lm), rstandard(lm), labels = rownames(data))
+```
+* Influential Observations (Cooks Distance) - 
+  * Plotting:
+    * Cooks distance against actual data:
+```{r, eval=FALSE}
+plot(cooks.distance(lm), xlab = x_i, ylab = cooks distance)
+```
+  * Cooks distance against leverage:
+```{r, eval=FALSE}
+plot(hatvalues(lm), cooks.distance(lm), xlab - leverage, ylab = cooks distance)
+abline(v = ((2*(p + 1))/(n)), h = (2*(p + 1))/(n - 2))
+```
+  * Get Cooks distance values:
+```{r, eval=FALSE}
+identify(1:n, cooks.distance(lm), label = rownames(lm))
+```
+  * **Note**: Must be run in the console \newline
+  
+* Categorical/indicator variable - 
+  * Linear model:
+```{r, eval=FALSE}
+lm(formula = y ~ x + category + xcategory, data = data)
+# OR
+lm(y ~ x + category + x:category, data = data)
+```
+  * To only get intercept:
+```{r, eval=FALSE}
+lm(y ~ x + category, data = data)
+```
+  * Summary:
+```{r, eval=FALSE}
+summary(lm)
+```
+  * Intercept = $\beta_0$ - Category 1 intercept
+  * *x* = $\beta_1$ - Category 1 slope
+  * *categoryn* = $\beta_{n + 1}z_{ni}$ - Category *n* intercept
+  * *x*:*categoryn* = $\beta_mx_iz_{ni}$ = category *n* slope  
+
+\newpage
+
+  * T-test of the linear model
+```{r, eval=FALSE}
+t.test(y ~ category, var.equal = TRUE, data = data)
+```
+  * p-value is if there is significant difference between observations between variables \newline
+  
+  * T-test of the linear regression
+```{r, eval=FALSE}
+lm(y ~ category, data = data)
+summary(lm)
+```
+  * p-value will be exact same as t-test of the linear model \newline
+
+* Variable selection -
+  * Brute-force - 
+    * View p-value for all variables
+```{r, eval=FALSE}
+print(load("file.RData"))
+lm <- lm(y ~ ., data = data)
+summary(lm)$coefficients
+```
+  * Evaluate *n* best models with up to *x* variables  
+```{r, eval=FALSE}
+library(leaps)
+subsets <- regsubsets(y ~ ., nbest = n, nvmax = x, data = data)
+subsetsummary <- summary(subsets)
+subsetsummary$outmat
+```
+  * Better version of the graph  
+```{r, eval=FALSE}
+library(kableExtra)
+kable(subsetsummary$outmat)
+```
+  * Will show a list of models, far left number is number of variables, second number is if it's the 1st, 2nd, etc best option for that number of variables
+  
+\newpage
+  
+    * Compare the graphs of models  
+```{r, eval=FALSE}
+par(mfrow = c(1, 3))
+```
+\# Plot $R^2$
+```{r, eval=FALSE}
+plot(n:m, subsetsummary$adjr2, log = "y") # if using log of values
+```
+\# Plot BIC
+```{r, eval=FALSE}
+plot(n:m, subsetsummary$bic, log = "y") # if using log of values
+```
+\# Plot $C_p$  
+```{r, eval=FALSE}
+plot(n:m, subsetsummary$cp, log = "y") # if using log values
+```
+  * Where *n* is the minimum number of variables to include
+  * And *m* is the maximum
+    * Look at p-value for each model with *x* number of variables
+```{r, eval=FALSE}
+subsetmatrix <- subsetsummary$outmat
+lmp <- lm(formula(paste("y",
+                        paste(names
+                              (which
+                                (subsetmatrix[,x]=="*")),
+                                          collapse="+")))
+                        data = data)
+summary(lmp)
+```
+  * Extract AIC  
+```{r, eval=FALSE}
+extractAIC(lm, k = df weight)
+```
+  * Forward selection - 
+    * Minimal model 
+```{r, eval=FALSE}
+lm <- lm(y ~ 1, data = df)
+```
+
+\newpage
+
+  * See the list of AIC values
+```{r, eval=FALSE}
+lm <- lm(y ~ current model variables, data = data)
+lmforward <- step(lm, scope = ~ x_1 + x_2 ... x_n, # not including variables in current model)
+                  direction = "forward"
+```
+  * <none> is the current model
+  * OR
+```{r, eval=FALSE}
+step(lm, scope = formula(df), direction = "forward")
+```
+  * Can use trace = 0 to hide the steps
+  * OR
+```{r, eval=FALSE}
+regsubsets(y ~ ., nbest = n, data = data, method = "forward")
+```
+  * Backward selection - 
+    * Same as forward, but with direction/method = "backward", and don't need scope 
+  * Stepwise selection/both direction selection  
+    * Same as backward, except direction/method = "both"
+      * Don't actually need direction, as "both" is default \newline
+
+* Interaction
+  * PRESS
+    * Can use leaps package, but doesn't output fitted models
+```{r, eval=FALSE}
+press(modellm)
+```
+  * Otherwise there is a package DAAG with a press function
+```{r, eval=FALSE}
+library(DAAG)
+press(modellm)
+```
+  * Creating a training and test set 
+```{r, eval=FALSE}
+samplevalues <- sample(nrow(df), floor(0.2, * nrow(df)))
+test <- df[samplevalues, ]
+training <- df[-samplevalues, ]
+```
+  * Compare model to prediction
+```{r, eval=FALSE}
+prediction <- predict(modellm, newdata = test)
+actual <- df$y
+plot(actual, prediction)
+abline(0, 1)
+```
+
+\newpage
+
+  * RMSEP
+```{r, eval=FALSE}
+RMSEP <- sqrt(sum((actual - prediction)^2)/length(actual))
+```
+  * Multi-collinearity
+    * Coloured graph showing levels of correlation
+```{r, eval=FALSE}
+library(corrplot)
+corrplot(cor(data[, columnstoremove]))
+```
+  * To see a single row
+```{r, eval=FALSE}
+corrplot(cor(data[, columnsincluded])[columnsincluded, columntoview, drop = FALSE],
+         cl.pos = 'n', method = 'number')
+```
+  * A different, uglier version  
+```{r, eval=FALSE}
+library(lattice)
+splom(~data[, columnstoremove], groups = category, data = data, pscales = 0, varname.cex = 0.5)
+```
+require(lattice)  
+  * VIF (variance inflation score) - **want to be less than 5**, else possible multicollinearity
+```{r, eval=FALSE}
+library(CARS)
+vif(lm)
+```
+
+### Polynomial Regression
+* Polynomial Regression - 
+  * Linear model:
+```{r, eval=FALSE}
+lm(y ~ x + I(x^2), data = data)
+```
+  * Fitted model:
+```{r, eval=FALSE}
+lm$fitted
+```
+  * Summary:
+```{r, eval=FALSE}
+summary(lm)
+```
+  * Intercept = $\beta_0$
+  * *x* = $\beta_1$
+  * I(*x*^2) = $\beta_2$
+
+\newpage
+    
+# RMarkdown Instructions
+## Setting up a new RMarkdown
+1. Click on the empty page with a green plus just under file
+2. Select RMarkdown...
+3. Enter the name and choose to output as html, you will still be able to output as pdf or word by clicking the arrow to the right of the knit button at the top of the RMarkdown window
+4. You can erase everything up to the r setup box
+5. Now you can write the document
+
+## Output options
+* You can manipulate the way your document outputs using the output: section at the very top
+
+### For a Contents Table
+* More complex
+```{r, eval=FALSE}
+# Note this is actual in YAML
+output:
+  pdf_document:
+    toc: yes
+  html_notebook:
+    highlight: haddock
+    number_sections: yes
+    theme: flatly
+  html_document:
+    highlight: haddock
+    number_sections: yes
+    theme: flatly
+    toc: yes
+  word_document:
+    highlight: tango
+    toc:yes
+```
+* Easier and more detailed  
+  * In the body of the document from where you want the contents to be curated:  
+\\tableofcontents
+
+### Change font and font size
+* To change font, in the YAML header above output, put:  
+mainfont: *fontname* (Will start with a capital, not all available)  
+fontsize: *number*pt 
+* To make italic or bold
+  * \*word\* - *word*
+  * \*\*word\*\*- **word**
+
+### Set page margins
+* Use geometry in the YAML header about output, where:
+  * left, is left margin
+  * right, is right margin
+  * top, is top margin, 
+  * bottom, is bottom margin  
+```{r, eval=FALSE}
+# Note this will be in YAML
+geometry: "left=ncm, right=ncm, top=ncm, bottom=ncm"
+```
+
+### Page layout
+* \\centering - will center everything below
+* \\raggedright or \\raggedleft - will right or left align everything below
+* \\clearpage will leave a clearpage for a front page
+
+### To have columns
+* Simple:  
+\\twocolumns
+  * Can get specific with:  
+\\twocolumns
+\\onecolumn
+
+* Complex, but specific:
+```{r, eval=FALSE}
+# This will be in YAML
+output:
+  pdf_document:
+    includes:
+      in_header: preamble.tex
+  html_document:
+    css: preamble.css
+```
+  * And be able to access the text documents it references
+  * You will also need to put the following in your r setup insert:
+```{r, eval=FALSE}
+# In R header at beginning of document, not r itself
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+* To knit to html - 
+```{r, eval=FALSE}
+# This is in css - filename preamble.css
+/* See: http://bookdown.org/yihui/rmarkdown-cookbook/multi-column-layout.html */
+.columns {display: flex; }
+```
+
+\newpage
+
+* To knit to pdf -  
+```{r, eval=FALSE}
+# This will be in LaTeX - filename preamble.tex
+# Hashes are not comments from here until end of chunk, they are part of the code
+%% See: https://bookdown.org/yihui/rmarkdown-cookbook/multi-column-layout.html
+\newenvironment{columns}[1][]{}{}
+%%
+\newenvironment{column}[1]{\begin{minipage}[t]{#1}\ignorespaces}{%
+\end{minipage}
+\ifhmode\unskip\fi
+\aftergroup\useignorespacesandallpars}
+%%
+\def\useignorespacesandallpars#1\ignorespaces\fi{%
+#1\fi\ignorespacesandallpars}
+%%
+\makeatletter
+\def\ignorespacesandallpars{%
+  \@ifnextchar\par
+    {\expandafter\ignorespacesandallpars\@gobble}%
+    {}%
+}
+\makeatother
+```
+
+  * Then use the following to create the columns, obviously you can change the percentages to add more columns, and the middle one is just there to leave some space between the two columns: \newline
+  
+:::::: \{.columns\} \newline
+
+::: \{.column width="48%" data-latex="\{0.48\\textwidth\}"\} \newline
+    
+text \newline
+
+::: \newline
+
+::: \{.column width="4%" data-latex="\{0.04\\textwidth\}"\} \newline
+
+\\ \newline
+
+::: \newline
+
+::: \{.column width="48%" data-latex="\{0.48\\textwidth\}"\} \newline
+    
+text \newline
+    
+::: \newline
+
+:::::: \newline
+
+\\newline
+
+## RMarkdown basics
+* You can use # to set headings. The more #'s the smaller the heading
+  * Headings are used by RMarkdown and pdf's as a way to jump straight to that sectoin of the document, so handy to use them a fair bit even if they're getting really small
+* Using a * at the start of a line create a bullet point, and if you use tab it will indent and use a different type of bullet point
+  * If you don't use it for every line in a paragraph it messes up though
+* You can create a numbered list just using 1. and so on, however you cannot put bullet points inside numbers, if you want to indent you have to use a), i), etc.
+* If you want to use any mathemtical symbols you can use LaTeX to write them by putting a dollar sign either side
+  * See LaTex commands for more details
+* If you aren't using lists or some kind, or you are using LaTeX insert, you need to put a double space to indicate when you want it to be a new line
+* You can access a number of commands using backslash
+  * Eg. \\newline or \\newpage
+
+### Knit to PDF
+* To knit to PDF you do need to install TinyTex and follow the instructions
+
+### Entering code into a document
+  * You can write code directly into the document by clicking on the green square with a C and a plus, you can choose from several languages
+* When coding with R, you can enter a number of commands in the header of the insert, the main ones I use:
+  * echo = TRUE/FALSE depends if you want to print the script in the document, if you put FALSE, but want to display the output, just use the print() function
+  * comment = NA will hide the line numbering in the document
+  * eval = FALSE will just show the code without trying to run it
+* For other types of code you might need to run a different engine.
+  * eg, \{bash, eval=FALSE, engine="sh"\}
+
+## Displaying graphs
+* You can change the size of a graph, and even had them side by side
+  * This is done by putting the following in the header of your inserted R code
+    * fig.hold='hold', out.width="*n*\%", out.height="*m*\%"
+  * If you want side by side, you will need to make sure you don't display your code (echo = FALSE), or it will separate them, so if you want to show code, put the graphs in a separate chunk of code
+* You can set the graph position with:
+  * \{fig.align="center"\}
+
+## Flow Chart
+* You can create a flow graph using R code
+  * To use in pdf first enter the following into the console
+```{r, eval=FALSE}
+install.packages('webshot')
+webshot::install_phantomjs()
+```
+  * To have it align nicely in a pdf, need to export it as a png file
+    * In the YAML header, put 
+```{r, eval=FALSE}
+# This will be in YAML
+output:
+  pdf_document:
+    keep_tex: yes
+```
+  * In the R code instructions put 
+```{r, eval=FALSE}
+# In R header at beginning of code chunk with diagram, not in R itself
+fig.cap="FigName", dev="png"
+```
+* Need DiagrammeR package
+
+```{r, fig.cap="Flow Chart", dev='png'}
+library(DiagrammeR)
+
+# Create graph with grViz function
+grViz("
+      # Used to make graph
+      digraph flow {
+      
+      # Gives graph instructions, dot is flow chart
+      graph [layout = dot, shape = rectangle]
+      
+      # Gives instructions for the actual information in the chart
+      node [shape = box,
+      fontname = Arial]
+      
+      # Set the nodes and What will show up in their place
+      A [label = A]
+      B [label = B]
+      C [label = C]
+      D [label = D]
+      E [label = E]
+      F [Label = F]
+      
+      # Markers to create grid shape
+      node [shape = none, width = 0, height = 0, label = '']
+      mark13
+      mark31
+      mark33
+      
+      # Create columns of data
+      A -> C -> mark13 [style = invis]
+      B -> D -> F [style = invis]
+      mark13 -> E -> mark33 [style = invis]
+      
+      # Create rows of data
+      {rank = same ; A -> B -> mark13 [style = invis]}
+      {rank = same ; C -> D -> E [style = invis]}
+      {rank = same ; mark31 -> F -> mark33 [style = invis]}
+      
+      # Actual connections where ever you want
+      edge [constraint = false]
+      A -> C [color = red]
+      B -> {D E} [color = blue]
+      C -> F [color = green]
+      
+      }
+      ")
+```
+
+
+\newpage
+
+## Inserting images
+* If you want to include images in your document just put:
+  * \!\[\](*DocumentName*)
+  * Where your title goes between the \[\]
+  * You need to have it saved in your current working file, or enter the full path
+* You can change the size using:
+  * \{width=*n*\%, height=*n*\%\} - after the brackets holding the filename, you can also use specific measurements instead of a scale percent
+
+## Creating Tables with R
+* You can use:  
+\| *Title1* \| *Title2* \|  
+\|\:\-\-\-\|\:\-\-\-\|  
+\| *Thing* \| *Description* \|
+* You do need to leave a space on top and bottom to do this
+* Example:
+
+| *Title1* | *Title2* |
+|:---|:---|
+| *Thing* | *Description*|
+
+## LaTeX Commands
+* Formatting
+  * Putting a \\ next to a command will stop it from doing the command, and will instead display it, *escapes a special character*
+  * \\to - an arrow pointing right
+  * \\text{} - will display any text normal-ish and will allow for spaces which otherwise don't show
+    * Or \\textit{} - for italised text
+  * \\mathit{} will italicise math
+  * \\boldsymbol{} will bold math
+  * \\begin{aligned} \\end{aligned} - will align multiple lines with each other where an *&* represents the point you want to be centred in the line and \\ to show a break between the end of one line and the beginning of the next
+  * \\left(/{/[ and \\right)/}/] - will show that bracket at the front (works the same for other bracket types)
+
+\newpage
+
+### Creating Tables with LaTex
+* Need to include tables: true above output in the YAML header
+* If using LaTeX maths symbols, etc inside the table, need to use \$*x*\$
+* Use:   
+\$\$\\begin{tabular}{\| *a* *b* \|} (Where *a* *b* are how you want the column text aligned, and \| create a border where wanted)  
+\\toprule (creates line at top of table)  
+*Title1* \& *Title2* \\\\  
+\\hline (creates line between title and info)  
+*Thing* \& *Description* \\\\  
+\\toprule (Use for bottom line too)
+\\end{tabular}\$\$
+* Example:
+$$\begin{tabular}{|l l|}
+\toprule
+\textit{Title1} & \textit{Title2} \\
+\hline
+\textit{Thing} & \textit{Description} \\
+\toprule
+\end{tabular}$$
+
+### Mathematical symbols
+
+| Type | Symbol |
+|:-------|:-----------|
+| \\infty | $\infty$
+| \\pm | $\pm$ |
+| \\ne | $\ne$ |
+| \\le | $\le$ |
+| \\ge | $\ge$ |
+| \\sim | $\sim$ |
+| *a*^{*b*} | $a^b$ |
+| *a*_{*b*} | $a_b$ |
+| \\bar{*a*} | $\bar{a}$ |
+| \\overline{*a*} | $\overline{a}$ |
+| \\hat{*a*} | $\hat{a}$ |
+| \\tilde{*a*} | $\tilde{a}$ |
+| \\sqrt{*a*} | $\sqrt{a}$ |
+| \\frac{*a*}{*b*} | $\frac{a}{b}$ |
+| \\sum^*a*_*b* | $\sum^a_b$ |
+| \\int^*a*_*b* | $\int^a_b$ |
+| {*a* \\choose *b*} OR \\binom{*a*}{*b*} | ${a \choose b}$ OR $\binom{a}{b}$ |
+| \\cap | $\cap$ |
+| \\cup | $\cup$ |
+| \\subset | $\subset$ |
+| \\subseteq | $\subseteq$ |
+
+\newpage
+
+### Greek symbols
+
+| Type | Symbol |
+|:-----|:-------|
+| \\alpha | $\alpha$ |
+| \\beta | $\beta$ |
+| \\gamma / \\Gamma | $\gamma / \Gamma$ |
+| \\delta / \\Delta | $\delta / \Delta$ |
+| \\epsilon / \\varepsilon | $\epsilon / \varepsilon$ |
+| \\zeta | $\zeta$ |
+| \\eta | $\eta$ |
+| \\theta / \\Theta / \\vartheta | $\theta / \Theta / \vartheta$ |
+| \\iota | $\iota$ |
+| \\kappa / \\varkappa | $\kappa / \varkappa$ |
+| \\lambda / \\Lambda | $\lambda / \Lambda$ |
+| \\mu | $\mu$ |
+| \\nu | $\nu$ |
+| \\xi / \\Xi | $\xi / \Xi$ |
+| \\pi / \\Pi / \\varpi | $\pi / \Pi / \varpi$ |
+| \\rho / \\varrho | $\rho / \varrho$ |
+| \\sigma / \\Sigma / \\varsigma | $\sigma / \Sigma / \varsigma$ |
+| \\tau | $\tau$ |
+| \\upsilon / \\Upsilon | $\upsilon / \Upsilon$ |
+| \\phi / \\Phi / \\varphi | $\phi / \Phi / \varphi$ |
+| \\chi | $\chi$ |
+| \\psi / \\Psi | $\psi / \Psi$ |
+| \\omega / \\Omega | $\omega / \Omega$ |
+
+### Other symbols
+
+| Type | Symbol |
+|:-----|:-------|
+| \\checkmark | $\checkmark$ |
+| \\boxed{a} | $\boxed{a}$ |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
